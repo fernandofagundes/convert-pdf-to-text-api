@@ -1,62 +1,31 @@
 # README #
 
-Formar um wizard de forma dinâmica, onde o usuário poderá passo-a-passo ir complementado as 
-informações afim de obter um fluxo de compra de mídia de forma simples.
+API responsável por converter PDF para texto
 
-
-### Tecnologias envolvidas ###
-
-* [Java 13](https://www.oracle.com/java/technologies/javase-jdk13-downloads.html)
-* [MyQSL](https://www.mysql.com/)
-* [Bitbucket](https://bitbucket.org/adsimco/jorney/src/master/)
-
-### Antes de Executar pela primeira vez
-
-No MySQL deverá ser criado a base de dados conforme o script resources/db/migration/create_database.sql
-
-* A atualização do banco de dados deverá ser versionada no flyway conforme padrão em 
-``` 
-resource: db.migration
+### Instalação das dependencias ###
 ```
-mvn versions:set
-
-### Problemas comuns
-
+    pip install -r requirements.txt
 ```
-How to configure "Shorten command line" method for whole project in IntelliJ
+ou
+```
+    pip install flask PyMuPDF
+```
+```
+    pip install flask PyMuPDF
+```
+#### executar o projeto ####
+```
+    python app.py
 ```
 
-Add: Inside your .idea folder, change workspace.xml file
+### exemplo de requisição ###
 ```
-<property name="dynamic.classpath" value="true" />+
-```
-
-To:
-```
-<component name="PropertiesComponent">
-....
-</component>
+    curl -X POST -F "file=@/path/to/pdf/file.pdf" http://localhost:5000/convert
 ```
 
-### Acesso a API de Recomendação se dá através da URL que está registrada no banco na tabela configuration
-
+### exemplo de resposta ###
 ```
-https://api.adsim.co/recommendation/api/v1
-https://api.adsim.co/recommendation/api/v2
+    {
+        "text": "Texto do PDF"
+    }
 ```
-
-### Swagger
-
-##### Local
-[http://localhost:8585/journey/api/v1/swagger-ui.html](http://localhost:8585/journey/api/v1/swagger-ui.html)
-
-##### QAS
-[https://qas.adsim.co/journey/api/v1/swagger-ui.html#](https://qas.adsim.co/journey/api/v1/swagger-ui.html#)
-
-
-##### Produção
-(https://api.adsim.co/journey/api/v1/swagger-ui.html#)[https://api.adsim.co/journey/api/v1/swagger-ui.html#]
-
-
-##### Homologação
-[https://hml.adsim.co/journey/api/v1/swagger-ui.html#](https://hml.adsim.co/journey/api/v1/swagger-ui.html#)
