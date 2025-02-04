@@ -1,39 +1,46 @@
 from flask import Flask, request, jsonify
 import fitz  # PyMuPDF
+import pytesseract
+from PIL import Image
+import io
 
 app = Flask(__name__)
 
 
+# Configura o caminho do executável do Tesseract, se necessário
+# pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
+
 @app.route('/upload', methods=['POST'])
 def upload_pdf():
-    # Verifica se o arquivo foi enviado com a chave 'file'
     if 'file' not in request.files:
         return jsonify({'erro': 'Arquivo não fornecido'}), 400
 
     pdf_file = request.files['file']
-
-    # Verifica se o nome do arquivo não está vazio
     if pdf_file.filename == '':
         return jsonify({'erro': 'Nenhum arquivo selecionado'}), 400
 
     try:
-        # Lê o conteúdo do arquivo em bytes
         file_bytes = pdf_file.read()
-
-        # Abre o PDF a partir do stream de bytes
         doc = fitz.open(stream=file_bytes, filetype="pdf")
         texto_extraido = ""
 
-        # Itera por todas as páginas e extrai o texto de cada uma
         for page in doc:
-            # Utiliza o método get_text para extrair o texto da página
-            texto_extraido += page.get_text("text")
+            image_list = page.get_images(full=True)
+            page_text = page.get_text("text")
 
-        # Retorna o texto extraído em formato JSON
+            if page_text.strip() == "":  # Se não houver texto, tenta OCR nas imagens
+                for img_index, img in enumerate(image_list):
+                    xref = img[0]
+                    base_image = doc.extract_image(xref)
+                    image_bytes = base_image["image"]
+                    image = Image.open(io.BytesIO(image_bytes))
+                    page_text += pytesseract.image_to_string(image, lang='por')
+
+            texto_extraido += page_text
+
         return jsonify({'texto': texto_extraido}), 200
 
     except Exception as e:
-        # Em caso de erro, retorna a mensagem de erro e status 500
         return jsonify({'erro': str(e)}), 500
 
 
