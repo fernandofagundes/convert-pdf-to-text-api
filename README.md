@@ -22,3 +22,13 @@ Você pode testar o endpoint /convert-pdf usando ferramentas como o Postman
 [http://localhost:8000/convert-pdf](http://localhost:8000/convert-pdf).
 
 Ou diretamente pela interface interativa do FastAPI em [http://localhost:8000/docs](http://localhost:8000/docs).
+
+### Baixe diretamento do Docker Hub ###
+
+```bash
+docker pull ffagundes/pdf-to-text-api:latest
+```
+
+```bash
+docker run -d -p 8000:8000 pdf-to-text-api
+```
