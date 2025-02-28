@@ -58,3 +58,11 @@ async def convert_pdf(file: UploadFile = File(...)):
     os.remove(caminho_pdf)
 
     return {"texto": texto_extraido}
+
+@app.get("/status")
+async def status_check():
+    return {"status": "up"}
+
+@app.get("/")
+async def status_check():
+    return {"status": "up"}
